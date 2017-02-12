@@ -12,6 +12,7 @@ AHovershipBase::AHovershipBase()
 
 	Box = CreateDefaultSubobject<UBoxComponent>(FName("Box"));
 	RootComponent = Box;
+	Box->SetEnableGravity(false);
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(FName("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
@@ -39,6 +40,7 @@ AHovershipBase::AHovershipBase()
 	HorizontalForce = 30000.f;
 	TorquesForce = 10000.f;
 	HorizontalDamping = 60000.f;
+	GravityForce = -980.0f;
 	m_ForwardDirection = FVector(1, 0, 0);
 }
 
@@ -58,9 +60,12 @@ void AHovershipBase::Tick( float DeltaTime )
 
 		if (Thruster_br->UseThruster() && Thruster_bl->UseThruster()) {
 			m_ForwardDirection = Thruster_br->m_GroundNormal;
-			//UE_LOG(LogTemp, Log, TEXT("Forward direction %s"), *m_ForwardDirection.ToString());
+			UE_LOG(LogTemp, Log, TEXT("Forward direction %s"), *m_ForwardDirection.ToString());
 		}
 	}
+
+	FVector g = Box->GetUpVector() * Box->GetMass() * GravityForce;
+	Box->AddForce(g);
 }
 
 // Called to bind functionality to input

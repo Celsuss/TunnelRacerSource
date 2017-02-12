@@ -66,5 +66,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HoverShip)
 	float HorizontalDamping;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HoverShip)
+	float GravityForce;
+
 	FVector m_ForwardDirection;
 };
