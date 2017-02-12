@@ -26,7 +26,7 @@ public:
 
 	void MoveForward(float Value);
 
-	void MoveSideways(float Value);
+	void MoveHorizontal(float Value);
 
 	void Torque(float Value);
 
@@ -58,10 +58,13 @@ public:
 	float ForwardForce;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HoverShip)
-	float SidewaysForce;
+	float HorizontalForce;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HoverShip)
 	float TorquesForce;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HoverShip)
+	float HorizontalDamping;
 
 	FVector m_ForwardDirection;
 };

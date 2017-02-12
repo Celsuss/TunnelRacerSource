@@ -36,8 +36,9 @@ AHovershipBase::AHovershipBase()
 
 
 	ForwardForce = 15000.f;
-	SidewaysForce = 10000.f;
-	TorquesForce = 7500.f;
+	HorizontalForce = 30000.f;
+	TorquesForce = 10000.f;
+	HorizontalDamping = 60000.f;
 	m_ForwardDirection = FVector(1, 0, 0);
 }
 
@@ -68,7 +69,7 @@ void AHovershipBase::SetupPlayerInputComponent(class UInputComponent* InputCompo
 	Super::SetupPlayerInputComponent(InputComponent);
 
 	InputComponent->BindAxis("MoveForward", this, &AHovershipBase::MoveForward);
-	InputComponent->BindAxis("MoveSideways", this, &AHovershipBase::MoveSideways);
+	InputComponent->BindAxis("MoveSideways", this, &AHovershipBase::MoveHorizontal);
 	InputComponent->BindAxis("Torque", this, &AHovershipBase::Torque);
 }
 
@@ -77,9 +78,15 @@ void AHovershipBase::MoveForward(float Value) {
 	Box->AddForce(v);
 }
 
-void AHovershipBase::MoveSideways(float Value) {
-	FVector v = Box->GetRightVector() * Value * SidewaysForce;
-	Box->AddForce(v);
+void AHovershipBase::MoveHorizontal(float Value) {
+	if (Value == 0) {
+		FVector damping = -(Box->GetRightVector() * Box->GetComponentVelocity().Y * HorizontalDamping);
+		Box->AddForce(damping);
+	}
+	else {
+		FVector v = Box->GetRightVector() * Value * HorizontalForce;
+		Box->AddForce(v);
+	}
 }
 
 void AHovershipBase::Torque(float Value) {

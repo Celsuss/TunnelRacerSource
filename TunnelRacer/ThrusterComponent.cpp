@@ -82,7 +82,7 @@ bool UThrusterComponent::UseThruster() {
 		force -= (deltaForce * 3);
 		box->AddForceAtLocation(force, start);
 
-		m_GroundNormal = hit->ImpactNormal.RotateAngleAxis(90, FVector(0, 1, 0));
+		m_GroundNormal = hit->ImpactNormal.RotateAngleAxis(90, box->GetRightVector());
 		return true;
 	}
 	else {
