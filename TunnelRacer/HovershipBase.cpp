@@ -35,8 +35,10 @@ AHovershipBase::AHovershipBase()
 	Thruster_bl->SetupAttachment(RootComponent);
 
 
-	ForwardForce = 10000.f;
+	ForwardForce = 15000.f;
 	SidewaysForce = 10000.f;
+	TorquesForce = 7500.f;
+	m_ForwardDirection = FVector(1, 0, 0);
 }
 
 // Called when the game starts or when spawned
@@ -50,7 +52,14 @@ void AHovershipBase::BeginPlay()
 void AHovershipBase::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
+	if (Thruster_fr->UseThruster() && Thruster_fl->UseThruster()) {
+		m_ForwardDirection = Thruster_fr->m_GroundNormal;
 
+		if (Thruster_br->UseThruster() && Thruster_bl->UseThruster()) {
+			m_ForwardDirection = Thruster_br->m_GroundNormal;
+			//UE_LOG(LogTemp, Log, TEXT("Forward direction %s"), *m_ForwardDirection.ToString());
+		}
+	}
 }
 
 // Called to bind functionality to input
@@ -60,14 +69,19 @@ void AHovershipBase::SetupPlayerInputComponent(class UInputComponent* InputCompo
 
 	InputComponent->BindAxis("MoveForward", this, &AHovershipBase::MoveForward);
 	InputComponent->BindAxis("MoveSideways", this, &AHovershipBase::MoveSideways);
+	InputComponent->BindAxis("Torque", this, &AHovershipBase::Torque);
 }
 
 void AHovershipBase::MoveForward(float Value) {
-	FVector v = Box->GetForwardVector() * Value * ForwardForce;
+	FVector v = m_ForwardDirection * Value * ForwardForce;
 	Box->AddForce(v);
 }
 
 void AHovershipBase::MoveSideways(float Value) {
 	FVector v = Box->GetRightVector() * Value * SidewaysForce;
 	Box->AddForce(v);
+}
+
+void AHovershipBase::Torque(float Value) {
+	Box->AddTorque(FVector(0, 0, Value * TorquesForce));
 }

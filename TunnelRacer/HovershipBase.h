@@ -28,6 +28,8 @@ public:
 
 	void MoveSideways(float Value);
 
+	void Torque(float Value);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=HoverShip)
 	UBoxComponent* Box;
 
@@ -57,4 +59,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HoverShip)
 	float SidewaysForce;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HoverShip)
+	float TorquesForce;
+
+	FVector m_ForwardDirection;
 };

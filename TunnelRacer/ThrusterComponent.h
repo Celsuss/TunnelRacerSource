@@ -21,6 +21,8 @@ public:
 	// Called every frame
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
 
+	bool UseThruster();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HoverShip)
 	float MaxHoverLength;
 
@@ -28,4 +30,6 @@ public:
 	float ThrusterForce;
 
 	FVector PreviousForce;
+
+	FVector m_GroundNormal;
 };
