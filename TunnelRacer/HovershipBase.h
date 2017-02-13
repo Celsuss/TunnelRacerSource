@@ -4,6 +4,7 @@
 
 #include "GameFramework/Pawn.h"
 #include "ThrusterComponent.h"
+#include "CustomGravityComponent.h"
 #include "HovershipBase.generated.h"
 
 UCLASS()
@@ -53,6 +54,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=HoverShip)
 	UThrusterComponent* Thruster_bl;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = HoverShip)
+	UCustomGravityComponent* CustomGravity;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HoverShip)
 	float ForwardForce;

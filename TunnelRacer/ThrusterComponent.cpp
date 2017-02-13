@@ -74,6 +74,7 @@ bool UThrusterComponent::UseThruster() {
 	//call GetWorld() from within an actor extending class
 	if (GetWorld()->LineTraceSingleByChannel(*hit, start, end, ECC_Visibility, *traceParams)) {
 		DrawDebugLine(GetWorld(), start, end, FColor(0, 255, 0), false, -1, 0, 2);
+		DrawDebugLine(GetWorld(), hit->ImpactPoint, hit->ImpactPoint+hit->ImpactNormal*500, FColor(0, 0, 255), false, -1, 0, 2);
 
 		const float length = (hit->ImpactPoint - start).Size() / MaxHoverLength;
 		FVector force = FMath::Lerp(ThrusterForce, 0.f, length) * hit->ImpactNormal;
@@ -83,6 +84,7 @@ bool UThrusterComponent::UseThruster() {
 		box->AddForceAtLocation(force, start);
 
 		m_GroundNormal = hit->ImpactNormal.RotateAngleAxis(90, box->GetRightVector());
+		DrawDebugLine(GetWorld(), hit->ImpactPoint, hit->ImpactPoint + m_GroundNormal * 500, FColor(255, 0, 0), false, -1, 0, 2);
 
 		//m_GroundNormal = () * 
 		return true;
