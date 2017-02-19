@@ -41,7 +41,7 @@ AHovershipBase::AHovershipBase()
 	ForwardForce = 15000.f;
 	HorizontalForce = 30000.f;
 	TorquesForce = 10000.f;
-	HorizontalDamping = 60000.f;
+	HorizontalDamping = 100000.f;
 	GravityForce = -980.0f;
 	m_ForwardDirection = FVector(1, 0, 0);
 }
@@ -86,18 +86,19 @@ void AHovershipBase::MoveForward(float Value) {
 	FVector v =  /*Box->GetForwardVector()*/ m_ForwardDirection * Value * ForwardForce;
 	Box->AddForce(v);
 	//m_ForwardDirection.Z = 0;
-	UE_LOG(LogTemp, Log, TEXT("Forward direction %s"), *Box->GetForwardVector().ToString());
+	//UE_LOG(LogTemp, Log, TEXT("Forward direction %s"), *Box->GetForwardVector().ToString());
 	
 }
 
 void AHovershipBase::MoveHorizontal(float Value) {
 	if (Value == 0) {
-		/*FVector damping = -(Box->GetRightVector() * Box->GetComponentVelocity().Y * HorizontalDamping);
-		Box->AddForce(damping);*/
+		FVector damping = Box->GetRightVector() * Box->GetComponentVelocity() * (HorizontalDamping * -1);
+		Box->AddForce(damping);
 
 		/*FVector force = Box->GetPhysicsLinearVelocity();
 		force *= Box->GetRightVector() * 0.25;
 		Box->SetPhysicsLinearVelocity(force);*/
+
 	}
 	else {
 		FVector v = Box->GetRightVector() * Value * HorizontalForce;
