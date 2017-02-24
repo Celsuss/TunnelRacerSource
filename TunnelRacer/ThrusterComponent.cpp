@@ -13,7 +13,7 @@ UThrusterComponent::UThrusterComponent()
 
 
 	// ...
-	MaxHoverLength = 60.f;
+	MaxHoverLength = 80.f;
 	ThrusterForce = 24000.f;
 }
 
@@ -82,9 +82,6 @@ bool UThrusterComponent::UseThruster() {
 		PreviousForce = force;
 		force -= (deltaForce * 3);
 		box->AddForceAtLocation(force, start);
-
-		m_GroundNormal = hit->ImpactNormal.RotateAngleAxis(90, box->GetRightVector());
-		DrawDebugLine(GetWorld(), hit->ImpactPoint, hit->ImpactPoint + m_GroundNormal * 500, FColor(255, 0, 0), false, -1, 0, 2);
 
 		//m_GroundNormal = () * 
 		return true;

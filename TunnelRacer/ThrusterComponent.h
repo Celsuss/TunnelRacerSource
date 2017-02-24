@@ -30,6 +30,4 @@ public:
 	float ThrusterForce;
 
 	FVector PreviousForce;
-
-	FVector m_GroundNormal;
 };

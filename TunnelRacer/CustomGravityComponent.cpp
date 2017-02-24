@@ -26,6 +26,7 @@ void UCustomGravityComponent::BeginPlay()
 	// ...
 	//m_Box->SetEnableGravity(false);
 	m_Box = (UBoxComponent*)GetAttachmentRoot();
+	m_ForwardVector = FVector(1, 0, 0);
 }
 
 
@@ -38,7 +39,7 @@ void UCustomGravityComponent::TickComponent( float DeltaTime, ELevelTick TickTyp
 	FHitResult* hit = new FHitResult();
 
 	const FVector start = GetComponentLocation();
-	const FVector end = start - m_Box->GetUpVector() * 200;
+	const FVector end = start - m_Box->GetUpVector() * 1000;
 
 	FCollisionQueryParams* traceParams = new FCollisionQueryParams();
 	traceParams->AddIgnoredActor(GetOwner());
@@ -49,6 +50,11 @@ void UCustomGravityComponent::TickComponent( float DeltaTime, ELevelTick TickTyp
 		
 		FVector g = hit->ImpactNormal * m_Box->GetMass() * GravityForce;
 		m_Box->AddForce(g);
+
+		m_ForwardVector = hit->ImpactNormal.RotateAngleAxis(90, m_Box->GetRightVector());
+		DrawDebugLine(GetWorld(), hit->ImpactPoint, hit->ImpactPoint + m_ForwardVector * 500, FColor(255, 0, 0), false, -1, 0, 2);
 	}
+	else
+		DrawDebugLine(GetWorld(), start, start + (end), FColor(0, 0, 255), false, -1, 0, 2);
 }
 

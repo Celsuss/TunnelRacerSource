@@ -41,7 +41,7 @@ public:
 	UCameraComponent* Cam;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=HoverShip)
-	UStaticMeshComponent* Mesh;
+	USkeletalMeshComponent* Mesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=HoverShip)
 	UThrusterComponent* Thruster_fr;

@@ -25,4 +25,6 @@ public:
 	float GravityForce;
 	
 	UBoxComponent* m_Box;
+
+	FVector m_ForwardVector;
 };

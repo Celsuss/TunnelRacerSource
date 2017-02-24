@@ -20,8 +20,9 @@ AHovershipBase::AHovershipBase()
 	Cam = CreateDefaultSubobject<UCameraComponent>(FName("Camera"));
 	Cam->SetupAttachment(SpringArm);
 
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Mesh"));
+	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(FName("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
+	//Mesh->bComponentUseFixedSkelBounds = true;
 
 	Thruster_fr = CreateDefaultSubobject<UThrusterComponent>(FName("ThrusterComponent_fr"));
 	Thruster_fr->SetupAttachment(RootComponent);
@@ -39,7 +40,7 @@ AHovershipBase::AHovershipBase()
 	CustomGravity->SetupAttachment(RootComponent);
 
 	ForwardForce = 15000.f;
-	HorizontalForce = 30000.f;
+	HorizontalForce = 90000.f;
 	TorquesForce = 10000.f;
 	HorizontalDamping = 100000.f;
 	GravityForce = -980.0f;
@@ -57,18 +58,16 @@ void AHovershipBase::BeginPlay()
 void AHovershipBase::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
-	if (Thruster_fr->UseThruster() && Thruster_fl->UseThruster()) {
-		m_ForwardDirection = Thruster_fr->m_GroundNormal;
+	Thruster_fr->UseThruster();
+	Thruster_fl->UseThruster();
+	Thruster_br->UseThruster();
+	Thruster_bl->UseThruster();
 
-		if (Thruster_br->UseThruster() && Thruster_bl->UseThruster()) {
-			m_ForwardDirection = Thruster_br->m_GroundNormal;
-			////m_ForwardDirection.Z = 0;
-			//UE_LOG(LogTemp, Log, TEXT("Forward direction %s"), *m_ForwardDirection.ToString());
-		}
-	}
-
-	FVector g = Box->GetUpVector() * Box->GetMass() * GravityForce;
-	//Box->AddForce(g);
+	m_ForwardDirection = CustomGravity->m_ForwardVector;
+	FRotator rot = FRotationMatrix::MakeFromX(m_ForwardDirection).Rotator();
+	//this->FaceRotation(rot);
+	//Box->SetWorldRotation(m_ForwardDirection);
+	//Box->SetRelativeRotation(rot);
 }
 
 // Called to bind functionality to input
@@ -83,7 +82,7 @@ void AHovershipBase::SetupPlayerInputComponent(class UInputComponent* InputCompo
 
 void AHovershipBase::MoveForward(float Value) {
 	
-	FVector v =  /*Box->GetForwardVector()*/ m_ForwardDirection * Value * ForwardForce;
+	FVector v =  m_ForwardDirection * Value * ForwardForce;
 	Box->AddForce(v);
 	//m_ForwardDirection.Z = 0;
 	//UE_LOG(LogTemp, Log, TEXT("Forward direction %s"), *Box->GetForwardVector().ToString());
@@ -93,7 +92,7 @@ void AHovershipBase::MoveForward(float Value) {
 void AHovershipBase::MoveHorizontal(float Value) {
 	if (Value == 0) {
 		FVector damping = Box->GetRightVector() * Box->GetComponentVelocity() * (HorizontalDamping * -1);
-		Box->AddForce(damping);
+		//Box->AddForce(damping);
 
 		/*FVector force = Box->GetPhysicsLinearVelocity();
 		force *= Box->GetRightVector() * 0.25;
